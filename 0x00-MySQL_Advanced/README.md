@@ -535,5 +535,87 @@ Table   Create Table
 students    CREATE TABLE `students` (\n  `name` varchar(255) NOT NULL,\n  `score` int(11) DEFAULT '0',\n  `last_meeting` date DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1
 bob@dylan:~$ 
 ```
+### 12. Average weighted score
+File:  [100-average_weighted_score.sql](100-average_weighted_score.sql), [100-init.sql](100-init.sql), [100-main.sql](100-main.sql)
+
+Write a SQL script that creates a stored procedure  `ComputeAverageWeightedScoreForUser`  that computes and store the average weighted score for a student.
+
+**Requirements:**
+
+-   Procedure  `ComputeAverageScoreForUser`  is taking 1 input:
+    -   `user_id`, a  `users.id`  value (you can assume  `user_id`  is linked to an existing  `users`)
+
+**Tips**:
+
+-   [Calculate-Weighted-Average](https://intranet.alxswe.com/rltoken/QHx92mlF43zF6GTEil-Cyw "Calculate-Weighted-Average")
+```
+bob@dylan:~$ 
+bob@dylan:~$ cat 100-init.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 100-average_weighted_score.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 100-main.sql | mysql -uroot -p holberton 
+Enter password: 
+id  name    average_score
+1   Bob 0
+2   Jeanne  82
+id  name    weight
+1   C is fun    1
+2   Python is cool  2
+user_id project_id  score
+1   1   80
+1   2   96
+2   1   91
+2   2   73
+--
+--
+id  name    average_score
+1   Bob 0
+2   Jeanne  79
+bob@dylan:~$ 
+```
+
+### 13. Average weighted score for all!
+File:  [101-average_weighted_score.sql](101-average_weighted_score.sql), [101-main.sql](101-main.sql), [101-init.sql](101-init.sql)
+
+Write a SQL script that creates a stored procedure  `ComputeAverageWeightedScoreForUsers`  that computes and store the average weighted score for all students.
+
+**Requirements:**
+
+-   Procedure  `ComputeAverageWeightedScoreForUsers`  is not taking any input.
+
+**Tips**:
+
+-   [Calculate-Weighted-Average](https://intranet.alxswe.com/rltoken/QHx92mlF43zF6GTEil-Cyw "Calculate-Weighted-Average")
+
+```
+bob@dylan:~$ cat 101-init.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 101-average_weighted_score.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 101-main.sql | mysql -uroot -p holberton 
+Enter password: 
+id  name    average_score
+1   Bob 0
+2   Jeanne  0
+id  name    weight
+1   C is fun    1
+2   Python is cool  2
+user_id project_id  score
+1   1   80
+1   2   96
+2   1   91
+2   2   73
+--
+--
+id  name    average_score
+1   Bob 90.6667
+2   Jeanne  79
+bob@dylan:~$ 
+```
 
 > Written with [StackEdit](https://stackedit.io/).
