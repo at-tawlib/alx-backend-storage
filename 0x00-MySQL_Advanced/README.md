@@ -240,3 +240,300 @@ id  email   name    valid_email
 3   jeanne@dylan.com    Jannis  1
 bob@dylan:~$ 
 ```
+
+### 6. Add bonus
+File:  [6-bonus.sql](6-bonus.sql), [6-init.sql](6-init.sql), [6-main.sql](6-main.sql)
+
+Write a SQL script that creates a stored procedure  `AddBonus`  that adds a new correction for a student.
+
+**Requirements:**
+-   Procedure  `AddBonus`  is taking 3 inputs (in this order):
+    -   `user_id`, a  `users.id`  value (you can assume  `user_id`  is linked to an existing  `users`)
+    -   `project_name`, a new or already exists  `projects`  - if no  `projects.name`  found in the table, you should create it
+    -   `score`, the score value for the correction
+
+**Context:**  _Write code in SQL is a nice level up!_
+
+```
+bob@dylan:~$ 
+bob@dylan:~$ cat 6-init.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 6-bonus.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 6-main.sql | mysql -uroot -p holberton 
+Enter password: 
+id  name
+1   C is fun
+2   Python is cool
+user_id project_id  score
+1   1   80
+1   2   96
+2   1   91
+2   2   73
+--
+--
+--
+--
+id  name
+1   C is fun
+2   Python is cool
+3   Bonus project
+4   New bonus
+user_id project_id  score
+1   1   80
+1   2   96
+2   1   91
+2   2   73
+2   2   100
+2   3   100
+1   3   10
+2   4   90
+bob@dylan:~$ 
+```
+
+### 7. Average score
+File:  [7-average_score.sql](7-average_score.sql) , [7-init.sql](7-init.sql), [7-main.sql](7-main.sql)
+
+Write a SQL script that creates a stored procedure  `ComputeAverageScoreForUser`  that computes and store the average score for a student. Note: An average score can be a decimal
+
+**Requirements:**
+
+-   Procedure  `ComputeAverageScoreForUser`  is taking 1 input:
+    -   `user_id`, a  `users.id`  value (you can assume  `user_id`  is linked to an existing  `users`)
+
+```
+bob@dylan:~$ 
+bob@dylan:~$ cat 7-init.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 7-average_score.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 7-main.sql | mysql -uroot -p holberton 
+Enter password: 
+id  name    average_score
+1   Bob 0
+2   Jeanne  0
+user_id project_id  score
+1   1   80
+1   2   96
+2   1   91
+2   2   73
+--
+--
+--
+--
+id  name    average_score
+1   Bob 0
+2   Jeanne  82
+bob@dylan:~$ 
+```
+
+### 8. Optimize simple search
+File:  [8-index_my_names.sql](8-index_my_names.sql)
+
+Write a SQL script that creates an index  `idx_name_first`  on the table  `names`  and the first letter of  `name`.
+
+**Requirements:**
+
+-   Import this table dump:  [names.sql.zip](https://intranet.alxswe.com/rltoken/BluyCCIIfw0NqcjqUiUdEw "names.sql.zip")
+-   Only the first letter of  `name`  must be indexed
+
+**Context:**  _Index is not the solution for any performance issue, but well used, it’s really powerful!_
+
+```
+bob@dylan:~$ cat names.sql | mysql -uroot -p holberton
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ mysql -uroot -p holberton
+Enter password: 
+mysql> SELECT COUNT(name) FROM names WHERE name LIKE 'a%';
++-------------+
+| COUNT(name) |
++-------------+
+|      302936 |
++-------------+
+1 row in set (2.19 sec)
+mysql> 
+mysql> exit
+bye
+bob@dylan:~$ 
+bob@dylan:~$ cat 8-index_my_names.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ mysql -uroot -p holberton
+Enter password: 
+mysql> SHOW index FROM names;
++-------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table | Non_unique | Key_name       | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++-------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| names |          1 | idx_name_first |            1 | name        | A         |          25 |        1 | NULL   | YES  | BTREE      |         |               |
++-------+------------+----------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+1 row in set (0.00 sec)
+mysql> 
+mysql> SELECT COUNT(name) FROM names WHERE name LIKE 'a%';
++-------------+
+| COUNT(name) |
++-------------+
+|      302936 |
++-------------+
+1 row in set (0.82 sec)
+mysql> 
+mysql> exit
+bye
+bob@dylan:~$ 
+```
+
+### 9. Optimize search and score
+File:  [9-index_name_score.sql](9-index_name_score.sql)
+
+Write a SQL script that creates an index  `idx_name_first_score`  on the table  `names`  and the first letter of  `name`  and the  `score`.
+
+**Requirements:**
+
+-   Import this table dump:  [names.sql.zip](https://intranet.alxswe.com/rltoken/BluyCCIIfw0NqcjqUiUdEw "names.sql.zip")
+-   Only the first letter of  `name`  AND  `score`  must be indexed
+
+```
+bob@dylan:~$ cat names.sql | mysql -uroot -p holberton
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ mysql -uroot -p holberton
+Enter password: 
+mysql> SELECT COUNT(name) FROM names WHERE name LIKE 'a%' AND score < 80;
++-------------+
+| count(name) |
++-------------+
+|       60717 |
++-------------+
+1 row in set (2.40 sec)
+mysql> 
+mysql> exit
+bye
+bob@dylan:~$ 
+bob@dylan:~$ cat 9-index_name_score.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ mysql -uroot -p holberton
+Enter password: 
+mysql> SHOW index FROM names;
++-------+------------+----------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table | Non_unique | Key_name             | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++-------+------------+----------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| names |          1 | idx_name_first_score |            1 | name        | A         |          25 |        1 | NULL   | YES  | BTREE      |         |               |
+| names |          1 | idx_name_first_score |            2 | score       | A         |        3901 |     NULL | NULL   | YES  | BTREE      |         |               |
++-------+------------+----------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+2 rows in set (0.00 sec)
+mysql> 
+mysql> SELECT COUNT(name) FROM names WHERE name LIKE 'a%' AND score < 80;
++-------------+
+| COUNT(name) |
++-------------+
+|       60717 |
++-------------+
+1 row in set (0.48 sec)
+mysql> 
+mysql> exit
+bye
+bob@dylan:~$ 
+```
+
+### 10. Safe divide
+File:  [10-div.sql](10-div.sql), [10-init.sql](10-init.sql)
+
+Write a SQL script that creates a function  `SafeDiv`  that divides (and returns) the first by the second number or returns 0 if the second number is equal to 0.
+
+**Requirements:**
+
+-   You must create a function
+-   The function  `SafeDiv`  takes 2 arguments:
+    -   `a`, INT
+    -   `b`, INT
+-   And returns  `a / b`  or 0 if  `b == 0`
+
+```
+bob@dylan:~$ cat 10-init.sql | mysql -uroot -p holberton
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 10-div.sql | mysql -uroot -p holberton
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ echo "SELECT (a / b) FROM numbers;" | mysql -uroot -p holberton
+Enter password: 
+(a / b)
+5.0000
+0.8000
+0.6667
+2.0000
+NULL
+0.7500
+bob@dylan:~$ 
+bob@dylan:~$ echo "SELECT SafeDiv(a, b) FROM numbers;" | mysql -uroot -p holberton
+Enter password: 
+SafeDiv(a, b)
+5
+0.800000011920929
+0.6666666865348816
+2
+0
+0.75
+bob@dylan:~$ 
+```
+
+### 11. No table for a meeting
+File:  [11-need_meeting.sql](11-need_meeting.sql), [11-init.sql](11-init.sql), [11-main.sql](11-main.sql)
+
+Write a SQL script that creates a view  `need_meeting`  that lists all students that have a score under 80 (strict) and no  `last_meeting`  or more than 1 month.
+
+**Requirements:**
+
+-   The view  `need_meeting`  should return all students name when:
+    -   They score are under (strict) to 80
+    -   **AND**  no  `last_meeting`  date  **OR**  more than a month
+
+```
+bob@dylan:~$ cat 11-init.sql | mysql -uroot -p holberton
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 11-need_meeting.sql | mysql -uroot -p holberton
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 11-main.sql | mysql -uroot -p holberton
+Enter password: 
+name
+Jean
+Steeve
+--
+--
+name
+Bob
+Jean
+Steeve
+--
+--
+name
+Bob
+Jean
+--
+--
+name
+Bob
+--
+--
+name
+Bob
+Jean
+--
+--
+View    Create View character_set_client    collation_connection
+XXXXXX<yes, here it will display the View SQL statement :-) >XXXXXX
+--
+--
+Table   Create Table
+students    CREATE TABLE `students` (\n  `name` varchar(255) NOT NULL,\n  `score` int(11) DEFAULT '0',\n  `last_meeting` date DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1
+bob@dylan:~$ 
+```
+
+> Written with [StackEdit](https://stackedit.io/).
