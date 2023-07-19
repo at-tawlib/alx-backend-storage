@@ -27,8 +27,8 @@ if __name__ == "__main__":
         {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}}])
     i = 0
-    for ip in sorted_ips:
+    for s in sorted_ips:
         if i == 10:
             break
-        print(f"\t{ip.get('_id')}: {ip.get('count')}")
+        print(f"\t{s.get('_id')}: {s.get('count')}")
         i += 1
