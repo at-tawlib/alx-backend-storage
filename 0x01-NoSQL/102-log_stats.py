@@ -2,7 +2,6 @@
 """
 provides some stats about Nginx logs stored in MongoDB
 """
-import pymongo
 from pymongo import MongoClient
 
 
@@ -11,7 +10,7 @@ if __name__ == "__main__":
     # get datatabase
     collection = client.logs.nginx
 
-    print(f"{collection.estimated_document_count()} logs")
+    print(f"{collection.count_documents({})} logs")
 
     print("Methods:")
     for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
